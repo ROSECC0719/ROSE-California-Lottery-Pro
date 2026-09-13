@@ -1,41 +1,19 @@
-# ROSE California Lottery Pro V1.0
+# ROSE California Lottery Pro V1.1
 
-Independent research project for California Lottery Fantasy 5.
+California Fantasy 5 獨立研究專案（繁體中文 GitHub Pages UI）。
 
-Status: V1.0 foundation/specification package (no production Firebase writes).
+- APP_VERSION: 1.1.0
+- UI_VERSION: ROSE-CA-F5-V1.1
+- Service Worker cache: rose-california-lottery-pro-v1.1
+- ZIP: ROSE_California_Lottery_Pro_V1.1.zip
 
-## Locked game
-- Official game: California Lottery Fantasy 5
-- Number field: 1-39
-- Draw: 5 numbers, order irrelevant
-- Frequency: daily, after draw entry closes at 6:30 p.m. California time
-- Official top-prize odds: 1 in 575,757
+## V1.1
+新增可直接部署至 GitHub Pages 的 `index.html`、`style.css`、`app.js` 與 PWA manifest。首頁提供歷史資料、紙本研究、號碼、結構、拖牌轉移、組合、Walk-forward、每日研究入口。
 
-## Research principles
-1. Walk-forward evaluation may use only information available before each evaluated draw.
-2. Model scores are research scores, never represented as true winning probabilities.
-3. Historical performance is reported as-is.
-4. Research includes combinations and structures, not only single-number rankings.
-5. Heavy computation must be chunked/non-blocking for mobile use.
-6. Version, UI version, README, Service Worker cache name, and ZIP filename move together.
-7. JavaScript syntax and ZIP integrity are checked for every release.
-8. California data is isolated from all Taiwan 539 production data.
+目前為 UI/架構版，尚未宣稱已完成真實分析引擎。研究分數不得稱為真實中獎率。Walk-forward 每一期只能使用該期以前資料。
 
-## Data isolation
-Proposed Firebase root namespace: `roseCaliforniaLotteryPro/fantasy5/v1/`
-Do not reuse any Taiwan 539 collection, document, storage prefix, cache key, or service worker scope.
+## Firebase 隔離
+本專案不連接、不寫入台灣 539 正式 Firebase。`firebase.example.json` 僅為 California 專案範例設定。
 
-## V1 modules planned
-- Official historical draw database
-- Paper Research Mode
-- Number / combination / structure research
-- Carry/transition relationships
-- Rule research and regime tracking
-- Hit statistics
-- Strict walk-forward blind testing
-- Independent GPT research layer
-- Combination burst research
-- Daily research snapshots
-- Firebase cloud sync (separate namespace/project configuration)
-
-No claim is made that historical patterns predict future random draws.
+## GitHub Pages
+將本資料夾「裡面的檔案」放在 repository 根目錄，Settings → Pages → Deploy from a branch → main / (root)。
