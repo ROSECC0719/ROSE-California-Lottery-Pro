@@ -1,1 +1,9 @@
-{"name": "ROSE California Lottery Pro", "short_name": "ROSE CA F5", "start_url": "./", "display": "standalone", "background_color": "#fff8fb", "theme_color": "#7d3152"}
+{
+  "name": "ROSE California Lottery Pro",
+  "short_name": "ROSE CA F5",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff8fb",
+  "theme_color": "#6f2345",
+  "lang": "zh-Hant"
+}
