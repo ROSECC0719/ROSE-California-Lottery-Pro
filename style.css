@@ -4,12 +4,22 @@
 .big-action{font-size:16px;padding:13px 18px}.pick-card small{margin-left:auto;color:#80636f}.panel h3{margin-top:24px}
 @media(max-width:700px){.header-game{justify-content:flex-end}.pick-card{align-items:flex-start;flex-direction:column}.pick-card small{margin-left:0}}
 
-/* V1.8 clarity + requested layout */
+/* V1.9 clarity + requested layout */
 @media(min-width:701px){header{min-height:126px}.header-game{right:max(18px,calc((100vw - 980px)/2 + 20px));top:22px;bottom:auto;flex-direction:column;align-items:flex-end;gap:5px}.header-game b{font-size:20px}.pill{font-size:16px}}
 .inline-balls{display:inline-flex;gap:5px;white-space:nowrap}.inline-balls span{display:inline-grid;place-items:center;min-width:31px;height:31px;padding:0 5px;border-radius:50%;background:#e7f7fb;color:#087f9a;font-weight:800;font-size:13px;border:1px solid #b9e6ef}
 .rulegrid textarea{display:block;width:100%;margin-top:5px;padding:11px;border:1px solid #e3c8d3;border-radius:10px;font-size:16px;resize:vertical;font-family:inherit}.range{display:flex;align-items:center;gap:7px}.range input{margin-top:5px}.tablewrap td .inline-balls{vertical-align:middle}
 @media(max-width:700px){.header-game{justify-content:flex-start;align-items:center;flex-direction:row}.inline-balls{gap:3px}.inline-balls span{min-width:27px;height:27px;font-size:12px;padding:0 3px}}
-/* V1.8: 539-style compact header + daily five-number entry */
+/* V1.9: 539-style compact header + daily five-number entry */
 @media(min-width:701px){header{min-height:96px;padding-top:12px;padding-bottom:12px}.brand{font-size:22px}.sub{font-size:14px}.header-game{top:18px;right:max(18px,calc((100vw - 980px)/2 + 20px));flex-direction:row;gap:8px}.header-game b{font-size:16px}.pill{font-size:14px;padding:4px 9px}}
 .draw-entry{margin:14px 0 20px;padding:18px;border:1px solid #e6ced8;border-radius:18px;background:#fffafb}.draw-entry label{display:inline-block;margin:0 12px 12px 0;font-size:13px;color:#735965}.draw-entry label input{display:block;margin-top:5px;padding:10px 12px;border:1px solid #dcc6cf;border-radius:10px;font-size:16px}.five-inputs{display:flex;gap:10px;margin:4px 0 10px}.five-inputs input{width:58px;height:58px;border-radius:50%;border:2px solid #cfe6ee;text-align:center;font-size:20px;font-weight:800;color:#087f9a;background:#f7fdff}.bulk-import{margin:10px 0 18px;color:#735965}.bulk-import summary{cursor:pointer;font-weight:700}.tablewrap td .inline-balls span{min-width:34px;height:34px}
 @media(max-width:700px){header{padding:11px 16px}.brand{font-size:18px}.sub{font-size:12px}.header-game b{font-size:14px}.pill{font-size:13px;padding:4px 8px}.five-inputs{justify-content:space-between;gap:6px}.five-inputs input{width:52px;height:52px}.draw-entry label{display:block}.draw-entry label input{width:100%}}
+
+/* V1.9: consistent number circles + mobile-specific layout */
+.mini-ball{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#e7f7fb;color:#087f9a;border:1px solid #b9e6ef;font-weight:850;font-size:13px;flex:0 0 auto}
+.combo-chip,.drag-chip,.transfer-chip{display:inline-flex!important;align-items:center;gap:7px;padding:8px 10px!important}
+.combo-chip .inline-balls{gap:4px}.combo-chip b,.drag-chip b,.transfer-chip b{white-space:nowrap}
+@media(max-width:700px){
+ header{position:relative;min-height:112px;padding:12px 16px 38px}.brand{font-size:18px}.sub{font-size:12px;max-width:75%}.header-game{position:absolute;right:16px;bottom:9px;left:auto;top:auto;margin:0;justify-content:flex-end;align-items:center;flex-direction:row;gap:6px}.header-game b{font-size:12px}.pill{font-size:11px;padding:3px 7px}
+ .combo-chip,.drag-chip,.transfer-chip{gap:5px;padding:7px 8px!important}.mini-ball{width:30px;height:30px;font-size:12px}
+ .transfer-table{overflow:visible}.transfer-table table,.transfer-table tbody,.transfer-table tr,.transfer-table td{display:block;width:100%}.transfer-table thead{display:none}.transfer-table tr{padding:12px 0;border-bottom:1px solid #eee}.transfer-table td{border:0;padding:4px 0;white-space:normal;display:grid;grid-template-columns:72px minmax(0,1fr);align-items:center;gap:8px}.transfer-table td:before{content:attr(data-label);font-size:12px;color:#80636f;font-weight:750}.transfer-table .inline-balls{display:flex;flex-wrap:wrap;gap:4px}.transfer-table .inline-balls span{min-width:30px;height:30px;font-size:12px}
+}

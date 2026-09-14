@@ -1,8 +1,9 @@
 'use strict';
-const APP_VERSION='1.8.0', UI_VERSION='ROSE-CA-F5-V1.8'; let D=[];
+const APP_VERSION='1.9.0', UI_VERSION='ROSE-CA-F5-V1.9'; let D=[];
 const panel=document.getElementById('panel'), latest=document.getElementById('latest');
 const balls=a=>a.map(n=>`<span class="ball">${String(n).padStart(2,'0')}</span>`).join('');
 const inlineBalls=a=>`<span class="inline-balls">${a.map(n=>`<span>${String(n).padStart(2,'0')}</span>`).join('')}</span>`;
+const miniBall=n=>`<span class="mini-ball">${String(n).padStart(2,'0')}</span>`;
 const freq=ds=>{let f=Array(40).fill(0);ds.forEach(r=>r.numbers.forEach(n=>f[n]++));return f};
 const gaps=a=>a.slice(1).map((n,i)=>n-a[i]);
 function latestView(){const r=D[0];latest.innerHTML=`<div class="latest-top"><div><div class="dbline">🎯 最新資料 <span class="status">● 離線可用</span></div><div class="latest-meta">${r.date}｜Draw #${r.draw}｜資料庫 ${D.length} 期</div></div><div class="balls">${balls(r.numbers)}</div></div>`}
@@ -15,7 +16,7 @@ function combo(){
   const pairs=new Map(), triples=new Map();
   D.forEach(r=>{const a=r.numbers;for(let i=0;i<5;i++)for(let j=i+1;j<5;j++){let k=`${a[i]}-${a[j]}`;pairs.set(k,(pairs.get(k)||0)+1);for(let z=j+1;z<5;z++){let t=`${a[i]}-${a[j]}-${a[z]}`;triples.set(t,(triples.get(t)||0)+1)}}});
   const pa=[...pairs].sort((x,y)=>y[1]-x[1]||x[0].localeCompare(y[0])).slice(0,30), ta=[...triples].sort((x,y)=>y[1]-x[1]||x[0].localeCompare(y[0])).slice(0,20);
-  panel.innerHTML=`<h2>💥 組合研究</h2><p><b>Pair 前30名</b>｜歷史共同出現次數</p><div class="chips">${pa.map(([k,v])=>`<span>${k}｜${v}次</span>`).join('')}</div><p><b>Triple 前20名</b></p><div class="chips">${ta.map(([k,v])=>`<span>${k}｜${v}次</span>`).join('')}</div><p class="muted">只描述目前 ${D.length} 期資料的共現，不是中獎機率。</p>`
+  panel.innerHTML=`<h2>💥 組合研究</h2><p><b>Pair 前30名</b>｜歷史共同出現次數</p><div class="chips combo-chips">${pa.map(([k,v])=>`<span class="combo-chip">${inlineBalls(k.split('-').map(Number))}<b>${v}次</b></span>`).join('')}</div><p><b>Triple 前20名</b></p><div class="chips combo-chips">${ta.map(([k,v])=>`<span class="combo-chip">${inlineBalls(k.split('-').map(Number))}<b>${v}次</b></span>`).join('')}</div><p class="muted">只描述目前 ${D.length} 期資料的共現，不是中獎機率。</p>`
 }
 function transfer(){
   const rows=[]; const carry=Array(40).fill(0), nextMap=Array.from({length:40},()=>Array(40).fill(0));
@@ -26,7 +27,7 @@ function transfer(){
   }
   const hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>carry[b]-carry[a]||a-b).slice(0,12);
   const trans=[];for(let a=1;a<=39;a++)for(let b=1;b<=39;b++)if(nextMap[a][b])trans.push([a,b,nextMap[a][b]]);trans.sort((x,y)=>y[2]-x[2]||x[0]-y[0]||x[1]-y[1]);
-  panel.innerHTML=`<h2>🔁 拖牌研究</h2><p><b>拖牌＝前一期開過的號碼，在下一期再次出現。</b> 例如前期有 09、14、27，下一期又開 09，就是「09 拖 1 次」。</p><h3>最常被拖的號碼</h3><div class="chips">${hot.map(n=>`<span>${String(n).padStart(2,'0')} 被拖 <b>${carry[n]}</b> 次</span>`).join('')}</div><h3>前一期號碼 → 下一期常一起出現 Top 24</h3><div class="chips">${trans.slice(0,24).map(([a,b,c])=>`<span>${String(a).padStart(2,'0')} → ${String(b).padStart(2,'0')}｜${c}次</span>`).join('')}</div><h3>逐期實際拖牌</h3><div class="tablewrap"><table><thead><tr><th>本期日期</th><th>前一期</th><th>本期</th><th>拖幾碼</th><th>拖了誰</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${x.newer.date}</td><td>${inlineBalls(x.older.numbers)}</td><td>${inlineBalls(x.newer.numbers)}</td><td><b>${x.repeated.length}</b></td><td>${x.repeated.length?inlineBalls(x.repeated):'—'}</td></tr>`).join('')}</tbody></table></div><p class="muted">這是歷史描述統計，不代表下一期必然延續。</p>`
+  panel.innerHTML=`<h2>🔁 拖牌研究</h2><p><b>拖牌＝前一期開過的號碼，在下一期再次出現。</b> 例如前期有 09、14、27，下一期又開 09，就是「09 拖 1 次」。</p><h3>最常被拖的號碼</h3><div class="chips drag-chips">${hot.map(n=>`<span class="drag-chip">${miniBall(n)}<b>被拖 ${carry[n]} 次</b></span>`).join('')}</div><h3>前一期號碼 → 下一期常一起出現 Top 24</h3><div class="chips transfer-chips">${trans.slice(0,24).map(([a,b,c])=>`<span class="transfer-chip">${miniBall(a)}<b>→</b>${miniBall(b)}<b>${c}次</b></span>`).join('')}</div><h3>逐期實際拖牌</h3><div class="tablewrap transfer-table"><table><thead><tr><th>本期日期</th><th>本期</th><th>前一期</th><th>拖幾碼</th><th>拖了誰</th></tr></thead><tbody>${rows.map(x=>`<tr><td data-label="本期日期">${x.newer.date}</td><td data-label="本期">${inlineBalls(x.newer.numbers)}</td><td data-label="前一期">${inlineBalls(x.older.numbers)}</td><td data-label="拖幾碼"><b>${x.repeated.length}</b></td><td data-label="拖了誰">${x.repeated.length?inlineBalls(x.repeated):'—'}</td></tr>`).join('')}</tbody></table></div><p class="muted">這是歷史描述統計，不代表下一期必然延續。</p>`
 }
 function walk(){
   if(D.length<20){panel.innerHTML='<h2>🧪 Walk-forward</h2><p>資料不足。</p>';return}
@@ -70,4 +71,4 @@ function importCSV(e){let file=e.target.files[0];if(!file)return;let rd=new File
 const views={history,stats,transfer,combo,walk,daily};
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{views[b.dataset.view]();panel.scrollIntoView({behavior:'smooth'})});
 (async()=>{let base=await fetch('./data/fantasy5-history.json',{cache:'no-store'}).then(r=>r.json());let imp=JSON.parse(localStorage.getItem('rose_ca_f5_import')||'[]');let map=new Map([...base,...imp].map(r=>[r.date,r]));D=[...map.values()].sort((a,b)=>b.date.localeCompare(a.date));latestView();daily()})().catch(e=>panel.innerHTML=`<h2>資料載入失敗</h2><p>${e.message}</p>`);
-if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=1.9.0').catch(()=>{}));
