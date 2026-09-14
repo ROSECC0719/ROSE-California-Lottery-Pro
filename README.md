@@ -1,13 +1,13 @@
-# ROSE California Lottery Pro V1.4
+# ROSE California Lottery Pro V1.5
 
-California Fantasy 5 獨立研究專案。與台灣 539 專案完全分離。
+California Fantasy 5 獨立研究專案。
 
-## V1.4
-- 將版本與「01～39 選5碼」移至頂部標題列，移除原本佔空間的 Hero 區塊。
-- 內建資料由原本停在 2026-08-27，補至 California Lottery 官方已確認的 2026-09-12 Draw #11998。
-- 首頁最新資料直接顯示日期、期號與五碼。
-- 離線核心資產與內建歷史資料使用 Service Worker cache `rose-ca-f5-v1.4.0`。
-- 研究功能仍以歷史描述與 Walk-forward 盲測為主；研究分數不得稱為真實中獎率。
-
-## 部署
-解壓縮後將本資料夾內容覆蓋 GitHub Pages repository 根目錄。首次更新請保持連網並重新整理；新版 Service Worker 啟用後可離線使用核心功能。
+- UI: ROSE-CA-F5-V1.5
+- App: 1.5.0
+- Cache: rose-ca-f5-v1.5.0
+- 首頁改為手機優先的緊湊 Header。
+- 合併「號碼研究／結構研究」為「統計分析」，移除重複的紙本入口。
+- 新增「今日嚴選五組」：可輸入必選、排除、奇偶、鄰期重複與和值規則，每次固定產生 5 組研究號碼。
+- 研究分數不是中獎機率。
+- Walk-forward 嚴禁使用未來資料。
+- Service Worker 快取核心檔與內建歷史資料，首次成功載入後可離線使用。
