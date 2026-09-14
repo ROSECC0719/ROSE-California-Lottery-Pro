@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION='2.0.0', UI_VERSION='ROSE-CA-F5-V2.0'; let D=[];
+const APP_VERSION='2.1.0', UI_VERSION='ROSE-CA-F5-V2.1'; let D=[];
 const panel=document.getElementById('panel'), latest=document.getElementById('latest');
 const balls=a=>a.map(n=>`<span class="ball">${String(n).padStart(2,'0')}</span>`).join('');
 const inlineBalls=a=>`<span class="inline-balls">${a.map(n=>`<span>${String(n).padStart(2,'0')}</span>`).join('')}</span>`;
@@ -45,14 +45,15 @@ function daily(){
 function saveRules(show=true){const o={fixedRules:document.getElementById('fixedRules').value,dragRules:document.getElementById('dragRules').value,ban:document.getElementById('ban').value,odd:document.getElementById('odd').value,repeat:document.getElementById('repeat').value,sumMin:document.getElementById('sumMin').value,sumMax:document.getElementById('sumMax').value};localStorage.setItem('rose_ca_f5_rules',JSON.stringify(o));if(show)document.getElementById('ruleStatus').innerHTML='✅ 固定規則已儲存在這台裝置。'}
 function ruleNums(text){return [...new Set((text.match(/\b(?:[1-9]|[12]\d|3[0-9])\b/g)||[]).map(Number))]}
 function fixedRuleGroups(text){return text.split(/\n+/).map(line=>({line,nums:ruleNums(line)})).filter(x=>x.nums.length)}
-function dragTargets(text){const latest=new Set(D[0].numbers),out=[];text.split(/\n+/).forEach(line=>{const [left,right='']=line.split(/->|→|拖/);const src=ruleNums(left),tar=ruleNums(right);if(src.some(n=>latest.has(n)))out.push(...tar)});return [...new Set(out)]}
+function dragRuleGroups(text){const latest=new Set(D[0].numbers);return text.split(/\n+/).map(line=>line.trim()).filter(Boolean).map(line=>{const m=line.match(/^\s*(0?[1-9]|[12]\d|3[0-9])\s*(?:開|->|→|拖)\s*(?:下期)?(?:出)?(.*)$/);if(!m)return null;const src=Number(m[1]),targets=ruleNums(m[2]).filter(n=>n!==src||/->|→|拖/.test(line));return {line,src,targets,triggered:latest.has(src)}}).filter(x=>x&&x.targets.length)}
+function dragTargets(text){const rules=dragRuleGroups(text),hits=rules.filter(r=>r.triggered),counts={};hits.forEach(r=>r.targets.forEach(n=>counts[n]=(counts[n]||0)+1));return {rules,hits,targets:Object.keys(counts).map(Number),counts}}
 
 function parseNums(id){return [...new Set(document.getElementById(id).value.split(/[ ,，、]+/).map(Number).filter(n=>n>=1&&n<=39))]}
 function generateFive(){
-  const fixed=fixedRuleGroups(document.getElementById('fixedRules').value),drag=dragTargets(document.getElementById('dragRules').value),ban=new Set(parseNums('ban')),oddRule=document.getElementById('odd').value,repMax=+document.getElementById('repeat').value,min=+document.getElementById('sumMin').value,max=+document.getElementById('sumMax').value,status=document.getElementById('ruleStatus');
+  const fixed=fixedRuleGroups(document.getElementById('fixedRules').value),dragInfo=dragTargets(document.getElementById('dragRules').value),drag=dragInfo.targets,ban=new Set(parseNums('ban')),oddRule=document.getElementById('odd').value,repMax=+document.getElementById('repeat').value,min=+document.getElementById('sumMin').value,max=+document.getElementById('sumMax').value,status=document.getElementById('ruleStatus');
   if(min>max){document.getElementById('picks').innerHTML='<p>和值規則衝突，請調整。</p>';return}
   const preferred=[...new Set([...fixed.flatMap(x=>x.nums),...drag])].filter(n=>!ban.has(n));
-  status.innerHTML=`固定規則 <b>${fixed.length}</b> 條｜本期觸發拖牌目標 <b>${drag.length?drag.map(n=>String(n).padStart(2,'0')).join('、'):'無'}</b>｜排除 <b>${ban.size?[...ban].map(n=>String(n).padStart(2,'0')).join('、'):'無'}</b>｜和值 <b>${min}～${max}</b>`;
+  status.innerHTML=`固定號碼規則 <b>${fixed.length}</b> 條｜拖牌規則 <b>${dragInfo.rules.length}</b> 條｜本期觸發 <b>${dragInfo.hits.length}</b> 條${dragInfo.hits.length?'<br>'+dragInfo.hits.map(r=>`${String(r.src).padStart(2,'0')} 觸發 → ${r.targets.map(n=>String(n).padStart(2,'0')).join('、')}`).join('<br>'):''}<br>拖牌目標 <b>${drag.length?drag.map(n=>`${String(n).padStart(2,'0')}${dragInfo.counts[n]>1?`（${dragInfo.counts[n]}條共同指向）`:''}`).join('、'):'無'}</b>｜排除 <b>${ban.size?[...ban].map(n=>String(n).padStart(2,'0')).join('、'):'無'}</b>｜和值 <b>${min}～${max}</b>`;
   const F=freq(D),R=freq(D.slice(0,12)),last={};D.forEach((r,i)=>r.numbers.forEach(n=>{if(last[n]===undefined)last[n]=i}));const prev=new Set(D[0].numbers),used=Array(40).fill(0),out=[];
   for(let g=0;g<5;g++){
     const ranked=Array.from({length:39},(_,i)=>i+1).filter(n=>!ban.has(n)).sort((a,b)=>{const bonus=n=>preferred.includes(n)?8:0;const sa=F[a]+R[a]*1.8+Math.min(last[a]??D.length,12)*.22-used[a]*3.2+bonus(a)+((a*7+g*11)%13)*.01,sb=F[b]+R[b]*1.8+Math.min(last[b]??D.length,12)*.22-used[b]*3.2+bonus(b)+((b*7+g*11)%13)*.01;return sb-sa||a-b});
@@ -71,4 +72,4 @@ function importCSV(e){let file=e.target.files[0];if(!file)return;let rd=new File
 const views={history,stats,transfer,combo,walk,daily};
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{views[b.dataset.view]();panel.scrollIntoView({behavior:'smooth'})});
 (async()=>{let base=await fetch('./data/fantasy5-history.json',{cache:'no-store'}).then(r=>r.json());let imp=JSON.parse(localStorage.getItem('rose_ca_f5_import')||'[]');let map=new Map([...base,...imp].map(r=>[r.date,r]));D=[...map.values()].sort((a,b)=>b.date.localeCompare(a.date));latestView();daily()})().catch(e=>panel.innerHTML=`<h2>資料載入失敗</h2><p>${e.message}</p>`);
-if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=1.9.0').catch(()=>{}));
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=2.1.0').catch(()=>{}));
