@@ -3,3 +3,9 @@
 @media(min-width:701px){header{position:relative;min-height:142px}.header-game{position:absolute;right:max(18px,calc((100vw - 980px)/2 + 20px));bottom:18px;margin:0}.header-game b{font-size:22px}.pill{font-size:18px}}
 .big-action{font-size:16px;padding:13px 18px}.pick-card small{margin-left:auto;color:#80636f}.panel h3{margin-top:24px}
 @media(max-width:700px){.header-game{justify-content:flex-end}.pick-card{align-items:flex-start;flex-direction:column}.pick-card small{margin-left:0}}
+
+/* V1.7 clarity + requested layout */
+@media(min-width:701px){header{min-height:126px}.header-game{right:max(18px,calc((100vw - 980px)/2 + 20px));top:22px;bottom:auto;flex-direction:column;align-items:flex-end;gap:5px}.header-game b{font-size:20px}.pill{font-size:16px}}
+.inline-balls{display:inline-flex;gap:5px;white-space:nowrap}.inline-balls span{display:inline-grid;place-items:center;min-width:31px;height:31px;padding:0 5px;border-radius:50%;background:#e7f7fb;color:#087f9a;font-weight:800;font-size:13px;border:1px solid #b9e6ef}
+.rulegrid textarea{display:block;width:100%;margin-top:5px;padding:11px;border:1px solid #e3c8d3;border-radius:10px;font-size:16px;resize:vertical;font-family:inherit}.range{display:flex;align-items:center;gap:7px}.range input{margin-top:5px}.tablewrap td .inline-balls{vertical-align:middle}
+@media(max-width:700px){.header-game{justify-content:flex-start;align-items:center;flex-direction:row}.inline-balls{gap:3px}.inline-balls span{min-width:27px;height:27px;font-size:12px;padding:0 3px}}
