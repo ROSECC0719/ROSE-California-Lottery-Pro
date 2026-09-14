@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION='2.1.0', UI_VERSION='ROSE-CA-F5-V2.1'; let D=[];
+const APP_VERSION='2.2.0', UI_VERSION='ROSE-CA-F5-V2.2'; let D=[];
 const panel=document.getElementById('panel'), latest=document.getElementById('latest');
 const balls=a=>a.map(n=>`<span class="ball">${String(n).padStart(2,'0')}</span>`).join('');
 const inlineBalls=a=>`<span class="inline-balls">${a.map(n=>`<span>${String(n).padStart(2,'0')}</span>`).join('')}</span>`;
@@ -43,7 +43,7 @@ function daily(){
   document.getElementById('saveRules').onclick=saveRules;document.getElementById('gen5').onclick=()=>{saveRules(false);generateFive()};generateFive()
 }
 function saveRules(show=true){const o={fixedRules:document.getElementById('fixedRules').value,dragRules:document.getElementById('dragRules').value,ban:document.getElementById('ban').value,odd:document.getElementById('odd').value,repeat:document.getElementById('repeat').value,sumMin:document.getElementById('sumMin').value,sumMax:document.getElementById('sumMax').value};localStorage.setItem('rose_ca_f5_rules',JSON.stringify(o));if(show)document.getElementById('ruleStatus').innerHTML='✅ 固定規則已儲存在這台裝置。'}
-function ruleNums(text){return [...new Set((text.match(/\b(?:[1-9]|[12]\d|3[0-9])\b/g)||[]).map(Number))]}
+function ruleNums(text){return [...new Set((text.match(/(?<!\d)(?:0?[1-9]|[12]\d|3[0-9])(?!\d)/g)||[]).map(Number))]}
 function fixedRuleGroups(text){return text.split(/\n+/).map(line=>({line,nums:ruleNums(line)})).filter(x=>x.nums.length)}
 function dragRuleGroups(text){const latest=new Set(D[0].numbers);return text.split(/\n+/).map(line=>line.trim()).filter(Boolean).map(line=>{const m=line.match(/^\s*(0?[1-9]|[12]\d|3[0-9])\s*(?:開|->|→|拖)\s*(?:下期)?(?:出)?(.*)$/);if(!m)return null;const src=Number(m[1]),targets=ruleNums(m[2]).filter(n=>n!==src||/->|→|拖/.test(line));return {line,src,targets,triggered:latest.has(src)}}).filter(x=>x&&x.targets.length)}
 function dragTargets(text){const rules=dragRuleGroups(text),hits=rules.filter(r=>r.triggered),counts={};hits.forEach(r=>r.targets.forEach(n=>counts[n]=(counts[n]||0)+1));return {rules,hits,targets:Object.keys(counts).map(Number),counts}}
@@ -72,4 +72,4 @@ function importCSV(e){let file=e.target.files[0];if(!file)return;let rd=new File
 const views={history,stats,transfer,combo,walk,daily};
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{views[b.dataset.view]();panel.scrollIntoView({behavior:'smooth'})});
 (async()=>{let base=await fetch('./data/fantasy5-history.json',{cache:'no-store'}).then(r=>r.json());let imp=JSON.parse(localStorage.getItem('rose_ca_f5_import')||'[]');let map=new Map([...base,...imp].map(r=>[r.date,r]));D=[...map.values()].sort((a,b)=>b.date.localeCompare(a.date));latestView();daily()})().catch(e=>panel.innerHTML=`<h2>資料載入失敗</h2><p>${e.message}</p>`);
-if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=2.1.0').catch(()=>{}));
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=2.2.0').catch(()=>{}));
